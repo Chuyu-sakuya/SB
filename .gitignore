@@ -1,0 +1,20 @@
+# IDE
+.idea/
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.out
+*.bin
+*.hex
+*.elf
+
+# Build output
+build/
+Debug/
+Release/
+
+# OS
+Thumbs.db
+.DS_Store

@@ -33,6 +33,8 @@
 /* USER CODE BEGIN Includes */
 #include "WHW_IRQN.h"
 #include "All_Init.h"
+#include "DJI_Motor.h"
+#include "Chassis_Task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,9 +117,6 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM9_Init();
   /* USER CODE BEGIN 2 */
-  HAL_CAN_Start(&hcan1);
-  HAL_CAN_Start(&hcan2);
-  CAN_Filter_Init();
 
   /* USER CODE END 2 */
 
@@ -210,6 +209,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 1 */
 		if(htim->Instance ==TIM9)
 	{
+
 	}
 
   /* USER CODE END Callback 1 */

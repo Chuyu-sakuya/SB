@@ -25,8 +25,9 @@ void StartMoveTask(void const * argument)
     for (;;)
     {
     	void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw_truth);
-    	DJI_Current_Ctrl(&hcan1,0x1FE,0,0,0,0);
-    	DJI_Current_Ctrl(&hcan1,0x1FE,0,0,0,0);
+    	//DJI_Current_Ctrl(&hcan2,0x1FE,10000,10000,10000,10000);
+    	DJI_Current_Ctrl(&hcan2,0x1FF,10000,10000,10000,10000);
+    	DJI_Current_Ctrl(&hcan1,0x200,4000,0,0,0);
 
     	vTaskDelay (1);
     }
@@ -126,6 +127,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan)
 			case 0x203:
 				MOTOR_CAN_RX_2006RM(&ALL_MOTOR.DJI_3508_Shoot_M.DATA, rx_data);
 				break;
+		case 0x205:
+			MOTOR_CAN_RX_6020RM(&ALL_MOTOR.DJI_6020_Swerve_0.DATA, rx_data);
+			break;
+
 			default:
 				break;
         }
@@ -143,6 +148,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan)
             case 0x202://摩擦2
                 MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Shoot_R.DATA, rx_data);
                 break;
+		case 0x205:
+			MOTOR_CAN_RX_6020RM(&ALL_MOTOR.DJI_6020_Swerve_0.DATA, rx_data);
+			break;
 			default:
 				break;
         }

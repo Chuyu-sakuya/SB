@@ -25,6 +25,8 @@ double DeltaAngle[4];
 uint8_t Length;
 void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw_truth)
 {
+
+
     //检测轮速，轮速低于极小值时，舵电机保持上次状态
     if (Wheel_Rpm[0]<1e-6&&Wheel_Rpm[1]<-1e-6&&Wheel_Rpm[2]<-1e-6&&Wheel_Rpm[3]<-1e-6)
     {
@@ -35,15 +37,20 @@ void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw
     }
 
     //简单的速度计算
-    double V1=Vx_truth-Vw_truth*Length;
-    double V2=Vy_truth+Vw_truth*Length;
-    double V3=Vx_truth+Vw_truth*Length;
-    double V4=Vy_truth-Vw_truth*Length;
+    double V1=(Vx_truth-Vw_truth*Length);
+    double V2=(Vy_truth+Vw_truth*Length);
+    double V3=(Vx_truth+Vw_truth*Length);
+    double V4=(Vy_truth-Vw_truth*Length);
     //简单的角度计算
-    ExternAngle[0]=atan2(V2,V3)*180/PI;
-    ExternAngle[1]=atan2(V2,V1)*180/PI;
-    ExternAngle[2]=atan2(V4,V3)*180/PI;
-    ExternAngle[3]=atan2(V4,V1)*180/PI;
+    GoalAngle[0]=atan2(V2,V3)*180/PI;
+    GoalAngle[1]=atan2(V2,V1)*180/PI;
+    GoalAngle[2]=atan2(V4,V3)*180/PI;
+    GoalAngle[3]=atan2(V4,V1)*180/PI;
+
+    for (int i=0;i<4;i++)
+    {
+
+    }
 
     //计算最小旋转角度，舵电机不会旋转90度以上的角度
    for (uint8_t i=0;i<4;i++)

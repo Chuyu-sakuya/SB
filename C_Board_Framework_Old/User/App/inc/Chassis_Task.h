@@ -7,6 +7,7 @@
 #include "MY_define.h"
 #include "RUI_ROOT_INIT.h"
 #include "Motors.h"
+#include "All_Init.h"
 #include "Power_Ctrl.h"
 void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw_truth);
 #endif

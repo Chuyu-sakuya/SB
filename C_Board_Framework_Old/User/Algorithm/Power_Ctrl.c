@@ -191,10 +191,10 @@ uint8_t chassis_power_control(CONTAL_Typedef *RUI_V_CONTAL_V,
     }
 
     //得到初始电机功率
-    initial_give_power[0] = get_initial_power(&MOTOR->DJI_3508_Chassis_1, model);
-    initial_give_power[1] = get_initial_power(&MOTOR->DJI_3508_Chassis_2, model);
-    initial_give_power[2] = get_initial_power(&MOTOR->DJI_3508_Chassis_3, model);
-    initial_give_power[3] = get_initial_power(&MOTOR->DJI_3508_Chassis_4, model);
+    initial_give_power[0] = get_initial_power(&MOTOR->DJI_3508_Chassis_0, model);
+    initial_give_power[1] = get_initial_power(&MOTOR->DJI_3508_Chassis_1, model);
+    initial_give_power[2] = get_initial_power(&MOTOR->DJI_3508_Chassis_2, model);
+    initial_give_power[3] = get_initial_power(&MOTOR->DJI_3508_Chassis_3, model);
 
     for(uint8_t i = 0; i < 4; i++)
     {
@@ -213,10 +213,10 @@ uint8_t chassis_power_control(CONTAL_Typedef *RUI_V_CONTAL_V,
         }
 
         //对每个电机分别进行功率限制
-        chassis_power_limit(&MOTOR->DJI_3508_Chassis_1, 1, model);
-        chassis_power_limit(&MOTOR->DJI_3508_Chassis_2, 2, model);
-        chassis_power_limit(&MOTOR->DJI_3508_Chassis_3, 3, model);
-        chassis_power_limit(&MOTOR->DJI_3508_Chassis_4, 4, model);
+        chassis_power_limit(&MOTOR->DJI_3508_Chassis_0, 1, model);
+        chassis_power_limit(&MOTOR->DJI_3508_Chassis_1, 2, model);
+        chassis_power_limit(&MOTOR->DJI_3508_Chassis_2, 3, model);
+        chassis_power_limit(&MOTOR->DJI_3508_Chassis_3, 4, model);
     }
     return RUI_DF_READY;
 }

@@ -121,10 +121,10 @@ void RUI_F_ROOT_ALL_STATUS(RUI_ROOT_STATUS_Typedef *Root, VT13_Typedef *DBUS, MO
     Root->MOTOR_Shoot_R = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Shoot_R.DATA);
     Root->MOTOR_Shoot_M = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Shoot_M.DATA);
 
-    Root->MOTOR_Chassis_1 = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Chassis_1.DATA);
-    Root->MOTOR_Chassis_2 = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Chassis_2.DATA);
-    Root->MOTOR_Chassis_3 = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Chassis_3.DATA);
-    Root->MOTOR_Chassis_4 = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Chassis_4.DATA);
+    Root->MOTOR_Chassis_1 = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Chassis_0.DATA);
+    Root->MOTOR_Chassis_2 = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Chassis_1.DATA);
+    Root->MOTOR_Chassis_3 = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Chassis_2.DATA);
+    Root->MOTOR_Chassis_4 = DJI_F_MOTOR_STATUS(&MOTOR->DJI_3508_Chassis_3.DATA);
 }
 
 /************************************************************万能分隔符**************************************************************

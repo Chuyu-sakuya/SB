@@ -9,5 +9,39 @@
 #include "Motors.h"
 #include "All_Init.h"
 #include "Power_Ctrl.h"
+
+//舵轮底盘参数
+typedef struct
+{
+    double m;//质量
+    double J;//转动惯量
+    double R;//舵轮中心点到底盘中心点的距离
+    double r;//舵轮半径
+}ChassisParams;
+
+//舵轮状态参数
+typedef struct
+{
+    double Pos_angle;//舵轮方位角
+    double Frd_angle;//舵向角的观测值
+    double speed;//电机输出轴转速
+    double tau_need;//需要的控制力矩
+
+    PID_t pid;
+}SwerveWheelState;
+
+//底盘运动状态参数
+typedef struct
+{
+    double Vx_extern;//x轴观测速度
+    double Vy_extern;//y轴观测速度
+    double Vw_extern;//旋转的观测速度
+
+    double Vx_dot_need;//x轴需要的加速度
+    double Vy_dot_need;//y轴需要的加速度
+    double Vw_dot_need;//旋转需要的加速度
+
+}ChassisState;
+
 void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw_truth);
 #endif

@@ -25,8 +25,8 @@ void StartMoveTask(void const * argument)
     for (;;)
     {
     	void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw_truth);
-    	//DJI_Current_Ctrl(&hcan2,0x1FE,10000,10000,10000,10000);
-    	DJI_Current_Ctrl(&hcan2,0x1FF,10000,10000,10000,10000);
+    	DJI_Current_Ctrl(&hcan2,0x1FE,10000,10000,10000,10000);
+    	//DJI_Current_Ctrl(&hcan2,0x1FF,10000,10000,10000,10000);
     	DJI_Current_Ctrl(&hcan1,0x200,4000,0,0,0);
 
     	vTaskDelay (1);

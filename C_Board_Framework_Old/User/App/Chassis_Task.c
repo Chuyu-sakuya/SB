@@ -18,71 +18,55 @@
 
 
 *************************************************************************************************************/
-double GoalAngle[4];
-double ExternAngle[4];
-double LastAngle[4];
-double DeltaAngle[4];
-uint8_t Length;
-void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw_truth)
+
+void chassis_init(ChassisParams *params, SwerveWheelState *wheelStates[4], ChassisState *state)
+{
+    params->m=20.0;
+    params->J=1.0;
+    params->R=0.3;
+    params->r=0.05;
+
+    for (int i=0; i<4; i++)
+    {
+        wheelStates[i]->Pos_angle=0.0;
+        wheelStates[i]->Frd_angle=0.0;
+    }
+}
+
+void cal_wheel_torque(ChassisParams *params, SwerveWheelState *wheelStates[4], ChassisState *state)
 {
 
+    double R=params->R;
+    double r=params->r;
+    double m=params->m;
+    double J=params->J;
 
-    //检测轮速，轮速低于极小值时，舵电机保持上次状态
-    if (Wheel_Rpm[0]<1e-6&&Wheel_Rpm[1]<-1e-6&&Wheel_Rpm[2]<-1e-6&&Wheel_Rpm[3]<-1e-6)
+    for (int i=0; i<4; i++)
     {
-        for (int i=0;i<4;i++)
-        {
-            ExternAngle[i]=LastAngle[i];
-        }
-    }
-
-    //简单的速度计算
-    double V1=(Vx_truth-Vw_truth*Length);
-    double V2=(Vy_truth+Vw_truth*Length);
-    double V3=(Vx_truth+Vw_truth*Length);
-    double V4=(Vy_truth-Vw_truth*Length);
-    //简单的角度计算
-    GoalAngle[0]=atan2(V2,V3)*180/PI;
-    GoalAngle[1]=atan2(V2,V1)*180/PI;
-    GoalAngle[2]=atan2(V4,V3)*180/PI;
-    GoalAngle[3]=atan2(V4,V1)*180/PI;
-
-    for (int i=0;i<4;i++)
-    {
-
-    }
-
-    //计算最小旋转角度，舵电机不会旋转90度以上的角度
-   for (uint8_t i=0;i<4;i++)
-   {
-       DeltaAngle[i]=GoalAngle[i]-ExternAngle[i];
+        double Pos_angle=wheelStates[i]->Pos_angle;
+        double Frd_angle=wheelStates[i]->Frd_angle;
 
 
+        //计算前馈力矩
+        double ff_x=m*state->Vx_dot_need*cos(Frd_angle);
+        double ff_y=m*state->Vy_dot_need*sin(Frd_angle);
+        double ff_w=J*state->Vw_dot_need*sin(Frd_angle-Pos_angle);
 
-       if (DeltaAngle[i]>90||DeltaAngle[i]<-90)
-       {
+        double tau_forward=(ff_x+ff_y+ff_w)*r/(4*R);
 
-           if (DeltaAngle[i]>90){ GoalAngle[i]=-(180-GoalAngle[i]);}
-           if (DeltaAngle[i]<-90){ GoalAngle[i]=GoalAngle[i]+180;}
+        //计算pid控制器
+        double P_x=state->Vx_extern*cos(Frd_angle);
+        double P_y=state->Vy_extern*sin(Frd_angle);
+        double P_w=state->Vw_extern*sin(Frd_angle-Pos_angle);
 
-       }
+        double target=(P_x+P_y+P_w)/r;
 
+        double tau_pid=PID_Calculate(&wheelStates[i]->pid, wheelStates[i]->speed, target);
 
-   }
-
-
-    //更新上次角度
-    for (uint8_t i=0;i<4;i++)
-    {
-        LastAngle[i]=ExternAngle[i];
+        wheelStates[i]->tau_need=tau_forward+tau_pid;
     }
 
 
-    //将速度分到轮子上
-    Wheel_Rpm[0]=sqrt(V3*V3+V2*V2);
-    Wheel_Rpm[1]=sqrt(V1*V1+V2*V2);
-    Wheel_Rpm[2]=sqrt(V3*V3+V4*V4);
-    Wheel_Rpm[3]=sqrt(V1*V1+V4*V4);
 
 
 

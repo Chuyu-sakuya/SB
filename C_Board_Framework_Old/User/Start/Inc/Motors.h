@@ -21,7 +21,7 @@ typedef struct
     DJI_MOTOR_Typedef DJI_6020_Swerve_0;
     DJI_MOTOR_Typedef DJI_6020_Swerve_1;
     DJI_MOTOR_Typedef DJI_6020_Swerve_2;
-    DJI_MOTOR_Typedef DHI_6020_Swerve_3;
+    DJI_MOTOR_Typedef DJI_6020_Swerve_3;
 
 	  DM_MOTOR_Typdef m_dm4310_y_t;
 	  DM_MOTOR_Typdef m_dm4310_p_t;

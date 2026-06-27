@@ -19,7 +19,7 @@ typedef struct
     double r;//舵轮半径
 }ChassisParams;
 
-//舵轮状态参数
+//舵轮轮电机状态参数
 typedef struct
 {
     double Pos_angle;//舵轮方位角
@@ -41,7 +41,20 @@ typedef struct
     double Vy_dot_need;//y轴需要的加速度
     double Vw_dot_need;//旋转需要的加速度
 
+    PID_t Chassis_pid_x;//专门为底盘观测速度x使用的pid
+    PID_t Chassis_pid_y;
+    PID_t Chassis_pid_w;
 }ChassisState;
+
+//舵轮舵电机参数
+typedef struct
+{
+    double zero_offset[4];//0点偏移量
+    double Frd_angle;//舵向角的观测值
+    double tau_need;
+    PID_t Swerve_pid_speed;//舵电机使用的pid
+    PID_t Swerve_pid_angle;
+}SwerveState;
 
 void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw_truth);
 #endif

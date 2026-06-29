@@ -20,14 +20,26 @@ void StartRobotUITask(void const * argument)
 void StartMoveTask(void const * argument)
 {
     portTickType currentTimeMove;
-    currentTimeMove = xTaskGetTickCount();
-
+   // currentTimeMove = xTaskGetTickCount();
+	chassis_init(chassisParams, wheelStates, chassisState, Swerve);
     for (;;)
     {
-    	void swerveWheelResolve(double *Wheel_Rpm,float Vx_truth,float Vy_truth,float Vw_truth);
-    	DJI_Current_Ctrl(&hcan2,0x1FE,0,0,0,0);
+
+
+    		Swerve[0].Frd_angle=wheelStates[0].Frd_angle=encode_to_rad(Swerve[0].zero_offset,ALL_MOTOR.DJI_6020_Swerve_0.DATA.Angle_now);
+    		Swerve[1].Frd_angle=wheelStates[1].Frd_angle=encode_to_rad(Swerve[1].zero_offset,ALL_MOTOR.DJI_6020_Swerve_1.DATA.Angle_now);
+    		Swerve[2].Frd_angle=wheelStates[2].Frd_angle=encode_to_rad(Swerve[2].zero_offset,ALL_MOTOR.DJI_6020_Swerve_2.DATA.Angle_now);
+			Swerve[3].Frd_angle=wheelStates[3].Frd_angle=encode_to_rad(Swerve[3].zero_offset,ALL_MOTOR.DJI_6020_Swerve_3.DATA.Angle_now);
+
+
+    	remote_control(DBUS,chassisState,&chassisParams,&ALL_MOTOR,wheelStates,Swerve);
+    	cal_wheel_torque(&chassisParams,wheelStates,chassisState);
+		cal_Swerve_torque(&ALL_MOTOR,wheelStates,&chassisParams,chassisState,Swerve);
+
+    	DJI_Current_Ctrl(&hcan1,0x1FE,Swerve[0].tau_need,Swerve[1].tau_need,Swerve[2].tau_need,Swerve[3].tau_need);
     	//DJI_Current_Ctrl(&hcan2,0x1FF,10000,10000,10000,10000);
-    	DJI_Current_Ctrl(&hcan1,0x200,0,0,0,0);
+    	//DJI_Current_Ctrl(&hcan1,0x200,wheelStates[0].tau_need,wheelStates[1].tau_need,wheelStates[2].tau_need,wheelStates[3].tau_need);
+    	DJI_Current_Ctrl(&hcan2,0x200,0,1000,1000,0);
 
     	vTaskDelay (1);
     }
@@ -124,31 +136,20 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan)
 		//CAN1
 		switch (can_rx.StdId)
 		{
-			case 0x201:
-			MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Chassis_0.DATA,rx_data);
-			break;
-			case 0x202:
-			MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Chassis_1.DATA,rx_data);
-			break;
-			case 0x203:
-			MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Chassis_2.DATA,rx_data);
-			break;
-			case 0x204:
-			MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Chassis_3.DATA,rx_data);
-			break;
 
-			case 0x205:
+		case 0x205:
 			MOTOR_CAN_RX_6020RM(&ALL_MOTOR.DJI_6020_Swerve_0.DATA,rx_data);
 			break;
-			case 0x206:
+		case 0x206:
 			MOTOR_CAN_RX_6020RM(&ALL_MOTOR.DJI_6020_Swerve_1.DATA,rx_data);
 			break;
-			case 0x207:
+		case 0x207:
 			MOTOR_CAN_RX_6020RM(&ALL_MOTOR.DJI_6020_Swerve_2.DATA,rx_data);
 			break;
-			case 0x208:
+		case 0x208:
 			MOTOR_CAN_RX_6020RM(&ALL_MOTOR.DJI_6020_Swerve_3.DATA,rx_data);
 			break;
+
 			default:
 				break;
         }
@@ -159,16 +160,21 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan)
 		//CAN2
 		switch (can_rx.StdId)
 		{
-            case 0x201://摩擦1
-                MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Shoot_L.DATA, rx_data);
-                break;
-
-            case 0x202://摩擦2
-                MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Shoot_R.DATA, rx_data);
-                break;
-		case 0x205:
-			MOTOR_CAN_RX_6020RM(&ALL_MOTOR.DJI_6020_Swerve_0.DATA, rx_data);
+		case 0x201:
+			MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Chassis_0.DATA,rx_data);
 			break;
+		case 0x202:
+			MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Chassis_1.DATA,rx_data);
+			break;
+		case 0x203:
+			MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Chassis_2.DATA,rx_data);
+			break;
+		case 0x204:
+			MOTOR_CAN_RX_3508RM(&ALL_MOTOR.DJI_3508_Chassis_3.DATA,rx_data);
+			break;
+
+
+
 			default:
 				break;
         }

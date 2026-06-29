@@ -41,6 +41,13 @@ model_t model;
 
 uint8_t flag2;
 
+//高人自己写的用于舵轮控制的结构体
+ChassisParams chassisParams;
+SwerveWheelState wheelStates[4];
+ChassisState chassisState;
+SwerveState Swerve[4];
+
+
 
 float vision_state;
 
@@ -100,6 +107,8 @@ void Everying_Init(void)
     TIM4->CCR3 = 50;
     HAL_Delay(500);
     TIM4->CCR3 = 0;
+
+
 
 }
 

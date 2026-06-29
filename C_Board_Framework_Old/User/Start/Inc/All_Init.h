@@ -85,4 +85,10 @@ extern float heat_state;
 extern float huanchongnengliang;
 extern uint8_t bulltspeed;
 
+
+extern ChassisParams chassisParams;
+extern SwerveWheelState wheelStates[4];
+extern ChassisState chassisState;
+extern SwerveState Swerve[4];
+
 #endif

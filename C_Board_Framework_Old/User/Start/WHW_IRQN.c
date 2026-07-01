@@ -21,25 +21,35 @@ void StartMoveTask(void const * argument)
 {
     portTickType currentTimeMove;
    // currentTimeMove = xTaskGetTickCount();
-	chassis_init(chassisParams, wheelStates, chassisState, Swerve);
+	chassis_init(&chassisParams, wheelStates, &chassisState, Swerve);
     for (;;)
     {
+		switch (DBUS.Remote.S1)
+		{
+			case 1:
 
-
-    		Swerve[0].Frd_angle=wheelStates[0].Frd_angle=encode_to_rad(Swerve[0].zero_offset,ALL_MOTOR.DJI_6020_Swerve_0.DATA.Angle_now);
-    		Swerve[1].Frd_angle=wheelStates[1].Frd_angle=encode_to_rad(Swerve[1].zero_offset,ALL_MOTOR.DJI_6020_Swerve_1.DATA.Angle_now);
-    		Swerve[2].Frd_angle=wheelStates[2].Frd_angle=encode_to_rad(Swerve[2].zero_offset,ALL_MOTOR.DJI_6020_Swerve_2.DATA.Angle_now);
+			break;
+			case 2:
+			Swerve[0].Frd_angle=wheelStates[0].Frd_angle=encode_to_rad(Swerve[0].zero_offset,ALL_MOTOR.DJI_6020_Swerve_0.DATA.Angle_now);
+			Swerve[1].Frd_angle=wheelStates[1].Frd_angle=encode_to_rad(Swerve[1].zero_offset,ALL_MOTOR.DJI_6020_Swerve_1.DATA.Angle_now);
+			Swerve[2].Frd_angle=wheelStates[2].Frd_angle=encode_to_rad(Swerve[2].zero_offset,ALL_MOTOR.DJI_6020_Swerve_2.DATA.Angle_now);
 			Swerve[3].Frd_angle=wheelStates[3].Frd_angle=encode_to_rad(Swerve[3].zero_offset,ALL_MOTOR.DJI_6020_Swerve_3.DATA.Angle_now);
 
 
-    	remote_control(DBUS,chassisState,&chassisParams,&ALL_MOTOR,wheelStates,Swerve);
-    	cal_wheel_torque(&chassisParams,wheelStates,chassisState);
-		cal_Swerve_torque(&ALL_MOTOR,wheelStates,&chassisParams,chassisState,Swerve);
-
+			remote_control(DBUS,chassisState,&chassisParams,&ALL_MOTOR,wheelStates,Swerve);
+			cal_wheel_torque(&chassisParams,wheelStates,chassisState);
+			cal_Swerve_torque(&ALL_MOTOR,wheelStates,&chassisParams,chassisState,Swerve);
+			break;
+		case 3:
+			stop(&DBUS,Swerve, wheelStates);
+			break;
+			default:
+			break;
+		}
     	DJI_Current_Ctrl(&hcan1,0x1FE,Swerve[0].tau_need,Swerve[1].tau_need,Swerve[2].tau_need,Swerve[3].tau_need);
     	//DJI_Current_Ctrl(&hcan2,0x1FF,10000,10000,10000,10000);
-    	//DJI_Current_Ctrl(&hcan1,0x200,wheelStates[0].tau_need,wheelStates[1].tau_need,wheelStates[2].tau_need,wheelStates[3].tau_need);
-    	DJI_Current_Ctrl(&hcan2,0x200,0,1000,1000,0);
+    	DJI_Current_Ctrl(&hcan2,0x200,wheelStates[0].tau_need*wheelStates[0].forward_3508,wheelStates[1].tau_need*wheelStates[1].forward_3508,wheelStates[2].tau_need*wheelStates[2].forward_3508,wheelStates[3].tau_need*wheelStates[3].forward_3508);
+    	//DJI_Current_Ctrl(&hcan2,0x200,0,1000,1000,0);
 
     	vTaskDelay (1);
     }

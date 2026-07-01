@@ -25,6 +25,7 @@ typedef struct
     float Frd_angle;//舵向角的观测值
     float speed;//电机输出轴转速
     float tau_need;//需要的控制力矩
+    uint8_t forward_3508;
 
     PID_t pid;
 }SwerveWheelState;
@@ -54,12 +55,14 @@ typedef struct
     PID_t Swerve_pid_speed;//舵电机使用的pid
     PID_t Swerve_pid_angle;
     float speed;//舵电机输出轴转速
+    float last_angle_target;
 }SwerveState;
 
 
-void chassis_init(ChassisParams params, SwerveWheelState wheelStates[4], ChassisState state, SwerveState Swerve[4]);
+void chassis_init(ChassisParams *params, SwerveWheelState wheelStates[4], ChassisState *state, SwerveState Swerve[4]);
 float encode_to_rad(int zero_offset, int raw_enconde);
 void remote_control(DBUS_Typedef DBUS, ChassisState state, ChassisParams *params, MOTOR_Typdef *Motor, SwerveWheelState wheelStates[4], SwerveState Swerve[4]);
 void cal_wheel_torque(ChassisParams *params, SwerveWheelState wheelStates[4], ChassisState state);
+void stop(DBUS_Typedef *DBUS,SwerveState Swerve[4],SwerveWheelState wheel[4]);
 void cal_Swerve_torque(MOTOR_Typdef *Motor, SwerveWheelState wheelStates[4], ChassisParams *params, ChassisState state, SwerveState Swerve[4]);
 #endif
